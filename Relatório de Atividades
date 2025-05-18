@@ -1,0 +1,29 @@
+Este relatório descreve as atividades realizadas no dia de hoje, focando na configuração de um ambiente de desenvolvimento web local utilizando o USBwebserver e na resolução de problemas encontrados durante o processo.
+
+Atividades Realizadas:
+
+O objetivo principal foi configurar um ambiente PHP local para o desenvolvimento do projeto . Para isso, segui os seguintes passos:
+
+Instalação e Inicialização do USBwebserver: O software USBwebserver foi instalado com sucesso. A inicialização do servidor Apache e do PHP ocorreu sem problemas aparentes inicialmente.
+
+Verificação da Configuração do PHP (php.ini): Busquei identificar o arquivo php.ini em uso pelo USBwebserver. Inicialmente, editei o arquivo localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/php/php.ini conforme instruções prévias para ativar a exibição de erros (display_errors = On e error_reporting = E_ALL).
+
+Erros Encontrados e Soluções Aplicadas:
+
+Edição do Arquivo php.ini Incorreto:
+
+Erro: Após a edição do arquivo php/php.ini, as mensagens de erro do PHP não eram exibidas no navegador.
+Solução: Através da análise do próprio arquivo php/php.ini, identifiquei a seguinte instrução: ; TO edit the config file go to: settings/php.ini. Compreendi que o arquivo correto a ser editado era o localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/settings/php.ini. A edição das diretivas display_errors e error_reporting neste arquivo resolveu o problema, e a exibição de erros foi ativada.
+Erro ao Acessar Arquivos PHP ("Failed opening required"):
+
+Erro: Ao tentar acessar arquivos .php através do navegador (ex: http://localhost/ ou http://localhost/teste.php), a página ficava em branco, e o arquivo de log do Apache (error.log) apresentava erros do tipo PHP Fatal error: Unknown: Failed opening required 'C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/root/...'. O access.log indicava um código de resposta 200 com um tamanho de conteúdo muito pequeno.
+Solução: A causa identificada foi a dificuldade do PHP em encontrar os arquivos na pasta raiz do servidor (root). Embora os arquivos estivessem presentes na pasta correta, investigamos a configuração do DocumentRoot no arquivo httpd.conf (localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/apache2/conf/httpd.conf). A configuração estava aparentemente correta, apontando para a pasta root. Outras possíveis causas, como permissões de arquivo e interferência de antivírus/firewall, foram consideradas, mas ainda não foram conclusivas até o momento. A persistência do erro sugere a necessidade de uma análise mais aprofundada da configuração do Apache ou de algum outro fator que esteja impedindo o acesso aos arquivos PHP.
+Outras Atividades:
+
+Criação de Repositório no GitHub: Foi criado um repositório público no GitHub (Outrasformacoes_ETEC) para armazenar e versionar os arquivos do projeto.
+Upload da Estrutura de Pastas: A estrutura de pastas do projeto (config, controller, dao, model, view) foi enviada para o repositório no GitHub através da interface web, mantendo a organização local.
+Criação do Arquivo README.md: Um arquivo README.md foi criado para o repositório, fornecendo informações básicas sobre o projeto, sua estrutura de pastas e instruções de uso.
+Conclusão:
+
+A configuração do ambiente de desenvolvimento local progrediu, com a ativação da exibição de erros do PHP. No entanto, o erro ao acessar os arquivos PHP ainda persiste e requer investigação adicional. O armazenamento dos arquivos no GitHub foi realizado com sucesso, garantindo o backup e o controle de versão do projeto.
+

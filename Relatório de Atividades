@@ -1,29 +1,34 @@
-Este relatório descreve as atividades realizadas no dia de hoje, focando na configuração de um ambiente de desenvolvimento web local utilizando o USBwebserver e na resolução de problemas encontrados durante o processo.
+1. Introdução
+Este relatório descreve as atividades realizadas hoje com foco na configuração de um ambiente de desenvolvimento web local. Nosso objetivo principal era configurar o USBwebserver para desenvolver meu projeto em PHP e MySQL, e documentar os problemas encontrados, as soluções aplicadas e o sucesso final.
 
-Atividades Realizadas:
+2. Atividades Iniciais Realizadas
+Para configurar nosso ambiente PHP local, seguimos os seguintes passos, incluindo uma importante reinstalação:
 
-O objetivo principal foi configurar um ambiente PHP local para o desenvolvimento do projeto . Para isso, segui os seguintes passos:
+Reinstalação e Configuração Inicial do USBwebserver: Desinstalamos uma versão anterior do USBwebserver. Em seguida, realizamos uma instalação limpa e correta no local desejado (C:\Users\marce\USBWebserver v10\USBWebserver v10), assegurando que a estrutura de pastas, incluindo a pasta root para nossos projetos, estivesse no lugar certo. A inicialização do servidor Apache e do PHP ocorreu sem problemas aparentes após esta reinstalação.
+Ajuste da Porta do Apache: A porta de comunicação do Apache foi ajustada de 8082 para 8088 no arquivo de configuração httpd.conf para garantir o funcionamento sem conflitos.
+Verificação e Ajuste do php.ini: Realizamos a verificação e o ajuste do arquivo php.ini para ativar a exibição de erros, uma ferramenta essencial para a depuração de código.
+3. Problemas Encontrados, Ajustes e Soluções (Nossa Luta e Vitórias!)
+Durante a configuração, enfrentamos alguns obstáculos. Veja como os abordamos e os superamos:
 
-Instalação e Inicialização do USBwebserver: O software USBwebserver foi instalado com sucesso. A inicialização do servidor Apache e do PHP ocorreu sem problemas aparentes inicialmente.
+3.1. Problema: Editei o php.ini Errado e os Erros Não Apareciam!
+Sintoma: Mesmo após editar o arquivo php/php.ini que parecia ser o correto, as mensagens de erro do PHP não apareciam no navegador, dificultando a identificação de problemas no código.
+Ajuste e Solução: Através de um comentário no próprio php.ini (TO edit the config file go to: settings/php.ini), descobri que o arquivo correto para edição estava em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/settings/php.ini. Ajustei as diretivas display_errors = On e error_reporting = E_ALL nesse arquivo, e a exibição de erros foi ativada com sucesso.
+Status: RESOLVIDO! (Ufa!)
+3.2. Problema: Erro "Failed opening required" ao Acessar Arquivos PHP e Dificuldade de Acesso Geral
+Sintoma: Inicialmente, ao tentar abrir os arquivos .php no navegador (ex: http://localhost/teste.php), a página ficava em branco. O error.log do Apache registrava erros como PHP Fatal error: Unknown: Failed opening required 'C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/root/...'. Além disso, tivemos momentos de ERR_CONNECTION_REFUSED.
+Ajuste e Solução: A causa principal da dificuldade em encontrar os arquivos e da conexão foi resolvida através de uma série de ações cruciais:
+A desinstalação de uma versão anterior do USBwebserver e a reinstalação limpa na pasta C:\Users\marce\USBWebserver v10\USBWebserver v10 foram fundamentais para garantir a integridade dos arquivos e dos caminhos internos.
+A alteração definitiva da porta do Apache de 8082 para 8088 no httpd.conf padronizou o acesso e resolveu conflitos de porta.
+A permissão de acesso no Firewall do Windows para o executável do Apache (httpd_usbwv8.exe), e a execução do USBwebserver como Administrador, garantiram que o servidor pudesse se comunicar corretamente.
+Resultado: Com todos esses ajustes, o servidor agora está rodando perfeitamente, e foi possível abrir e executar os arquivos PHP no navegador sem erros de "Failed opening required".
+Status: RESOLVIDO! (Grande vitória!)
+4. Outras Atividades Complementares (Organizando o Projeto!)
+Paralelamente à configuração do ambiente, também trabalhei na organização e versionamento do projeto:
 
-Verificação da Configuração do PHP (php.ini): Busquei identificar o arquivo php.ini em uso pelo USBwebserver. Inicialmente, editei o arquivo localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/php/php.ini conforme instruções prévias para ativar a exibição de erros (display_errors = On e error_reporting = E_ALL).
+Criação de Repositório no GitHub: Criei um repositório público no GitHub, Outrasformacoes_ETEC, para versionar e armazenar os arquivos do projeto de forma segura.
+Upload da Estrutura de Pastas: A estrutura de pastas do projeto (incluindo config, controller, dao, model, view) foi enviada para o repositório no GitHub, mantendo a organização original.
+Criação do README.md: Fiz um arquivo README.md para o repositório, fornecendo informações básicas sobre o projeto, sua estrutura e instruções iniciais de uso.
+5. Conclusão
+A configuração do ambiente de desenvolvimento local com o USBwebserver v10 foi concluída com sucesso total hoje! Superamos os desafios iniciais com a reinstalação, a correção da porta, os ajustes no php.ini e as permissões de firewall. Agora, nosso ambiente Apache, PHP e MySQL está rodando perfeitamente na porta 8088, e podemos acessar nossos projetos e o phpMyAdmin sem problemas.
 
-Erros Encontrados e Soluções Aplicadas:
-
-Edição do Arquivo php.ini Incorreto:
-
-Erro: Após a edição do arquivo php/php.ini, as mensagens de erro do PHP não eram exibidas no navegador.
-Solução: Através da análise do próprio arquivo php/php.ini, identifiquei a seguinte instrução: ; TO edit the config file go to: settings/php.ini. Compreendi que o arquivo correto a ser editado era o localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/settings/php.ini. A edição das diretivas display_errors e error_reporting neste arquivo resolveu o problema, e a exibição de erros foi ativada.
-Erro ao Acessar Arquivos PHP ("Failed opening required"):
-
-Erro: Ao tentar acessar arquivos .php através do navegador (ex: http://localhost/ ou http://localhost/teste.php), a página ficava em branco, e o arquivo de log do Apache (error.log) apresentava erros do tipo PHP Fatal error: Unknown: Failed opening required 'C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/root/...'. O access.log indicava um código de resposta 200 com um tamanho de conteúdo muito pequeno.
-Solução: A causa identificada foi a dificuldade do PHP em encontrar os arquivos na pasta raiz do servidor (root). Embora os arquivos estivessem presentes na pasta correta, investigamos a configuração do DocumentRoot no arquivo httpd.conf (localizado em C:/Users/marce/OneDrive/Documentos/usbwebserver - ETEC/apache2/conf/httpd.conf). A configuração estava aparentemente correta, apontando para a pasta root. Outras possíveis causas, como permissões de arquivo e interferência de antivírus/firewall, foram consideradas, mas ainda não foram conclusivas até o momento. A persistência do erro sugere a necessidade de uma análise mais aprofundada da configuração do Apache ou de algum outro fator que esteja impedindo o acesso aos arquivos PHP.
-Outras Atividades:
-
-Criação de Repositório no GitHub: Foi criado um repositório público no GitHub (Outrasformacoes_ETEC) para armazenar e versionar os arquivos do projeto.
-Upload da Estrutura de Pastas: A estrutura de pastas do projeto (config, controller, dao, model, view) foi enviada para o repositório no GitHub através da interface web, mantendo a organização local.
-Criação do Arquivo README.md: Um arquivo README.md foi criado para o repositório, fornecendo informações básicas sobre o projeto, sua estrutura de pastas e instruções de uso.
-Conclusão:
-
-A configuração do ambiente de desenvolvimento local progrediu, com a ativação da exibição de erros do PHP. No entanto, o erro ao acessar os arquivos PHP ainda persiste e requer investigação adicional. O armazenamento dos arquivos no GitHub foi realizado com sucesso, garantindo o backup e o controle de versão do projeto.
-
+As atividades de versionamento no GitHub também foram finalizadas, garantindo que o projeto esteja bem organizado e seguro. Estamos prontos para o desenvolvimento!

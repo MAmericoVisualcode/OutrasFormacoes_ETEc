@@ -1,6 +1,3 @@
--- Cria o schema projeto_final se não existir
-CREATE SCHEMA IF NOT EXISTS `projeto_final` DEFAULT CHARACTER SET latin1;
-
 -- Seleciona o schema projeto_final para uso
 USE `projeto_final`;
 
@@ -14,6 +11,15 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `senha` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idusuario`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = latin1;
+
+-- Cria a tabela administrador
+CREATE TABLE IF NOT EXISTS `administrador` (
+  `idadministrador` INT(11) NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL DEFAULT NULL,
+  `cpf` VARCHAR(11) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idadministrador`)
+) ENGINE = InnoDB AUTO_INCREMENT = 2 DEFAULT CHARACTER SET = latin1;
 
 -- Cria a tabela formacaoacademica
 CREATE TABLE IF NOT EXISTS `formacaoacademica` (
@@ -62,4 +68,5 @@ CREATE TABLE IF NOT EXISTS `outrasformacoes` (
     REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
+) ENGINE = InnoDB DEFAULT CHARACTER SET = latin1;
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = latin1;

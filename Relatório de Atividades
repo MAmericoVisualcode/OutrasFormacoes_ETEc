@@ -32,3 +32,169 @@ Criação do README.md: Fiz um arquivo README.md para o repositório, fornecendo
 A configuração do ambiente de desenvolvimento local com o USBwebserver v10 foi concluída com sucesso total hoje! Superamos os desafios iniciais com a reinstalação, a correção da porta, os ajustes no php.ini e as permissões de firewall. Agora, nosso ambiente Apache, PHP e MySQL está rodando perfeitamente na porta 8088, e podemos acessar nossos projetos e o phpMyAdmin sem problemas.
 
 As atividades de versionamento no GitHub também foram finalizadas, garantindo que o projeto esteja bem organizado e seguro. Estamos prontos para o desenvolvimento!
+
+----------------------------------------
+
+Contexto
+Para o desenvolvimento do nosso projeto, foi necessário configurar um servidor web local com suporte a PHP e um sistema de gerenciamento de banco de dados MySQL. Optamos pelo USBWebserver v10 devido à sua portabilidade e facilidade de uso, que integra Apache (servidor web), PHP e MySQL. O phpMyAdmin foi utilizado como interface gráfica para gerenciamento do MySQL.
+
+A.1. Configuração Inicial e Desafios
+A configuração inicial seguiu os passos usuais para o USBWebserver. A porta do servidor web Apache foi definida para 8088, conforme evidenciado na tela de phpinfo():
+
+Servidor Web (Apache): Apache/2.4.54 (Win32) PHP/8.1.7 na porta 8088.
+Versão do PHP: 8.1.7.
+Caminho do php.ini: C:\Usuários\marce\USBWebserver v10\USBWebserver v10\php\php.ini.
+No entanto, o principal desafio surgiu na configuração do acesso ao MySQL pelo phpMyAdmin.
+
+A.2. Configuração do config.inc.php do phpMyAdmin
+O arquivo de configuração do phpMyAdmin (config.inc.php) localizado em C:\Users\marce\USBWebserver v10\USBWebserver v10\phpMyAdmin foi ajustado para refletir as configurações do MySQL fornecidas pelo USBWebserver:
+
+PHP
+
+// Código comparado com o original e ajustado
+$cfg['blowfish_secret'] = 'aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQv';
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['host'] = 'localhost';
+$cfg['Servers'][$i]['port'] = '3307'; // Porta padrão do MySQL no USBWebserver
+$cfg['Servers'][$i]['user'] = 'root'; // Usuário padrão
+$cfg['Servers'][$i]['password'] = 'usbw'; // Senha padrão
+$cfg['Servers'][$i]['compress'] = false;
+$cfg['Servers'][$i]['AllowNoPassword'] = false;
+Observação: A variável blowfish_secret foi preenchida conforme exigido para autenticação baseada em cookie.
+
+A.3. Resolução de Problemas no Acesso ao MySQL
+Após a configuração inicial do phpMyAdmin, foi constatado um problema no login, que resultou em uma mensagem de erro específica ao tentar criar um novo usuário no phpMyAdmin:
+
+#3009 - Column count of mysql.user is wrong. Expected 45, found 43. Created with MySQL 50651, now running 50737. Please use mysql_upgrade to fix this error.
+Esta mensagem indica uma incompatibilidade na estrutura das tabelas internas do MySQL (mysql.user), resultante de uma atualização da versão do MySQL (de 5.6.51 para 5.7.37) sem a devida atualização das tabelas de sistema. A ferramenta recomendada para correção é o mysql_upgrade.
+
+A.3.1. Tentativas de Execução do mysql_upgrade e Desafios Encontrados
+Foram realizadas diversas tentativas de execução do utilitário mysql_upgrade.exe via linha de comando (tanto Prompt de Comando quanto PowerShell), seguindo os passos de navegação até o diretório mysql\bin e a sintaxe correta para o comando (.\mysql_upgrade.exe -u root -p usbw --port=3307).
+
+Apesar do executável mysql_upgrade.exe estar presente no diretório indicado (C:\Users\marce\USBWebserver v10\USBWebserver v10\mysql\bin), o sistema operacional persistentemente retornou a mensagem:
+
+'mysql_upgrade.exe' não é reconhecido como um comando interno ou externo, um programa operável ou um arquivo em lotes.
+Isso sugere um problema mais profundo com a integridade do executável, permissões de sistema ou uma peculiaridade da forma como esta versão específica do USBWebserver empacota seus componentes.
+
+A.4. Próximos Passos Propostos (Solução para o Problema de mysql_upgrade)
+Devido à impossibilidade de executar o mysql_upgrade para corrigir a incompatibilidade das tabelas do MySQL, a solução mais robusta e recomendada é a reinstalação completa do USBWebserver. Esta abordagem visa garantir uma instalação limpa e compatível de todos os seus componentes (Apache, PHP, MySQL), resolvendo qualquer possível corrupção de arquivos ou problemas de ambiente.
+
+Plano para Reinstalação:
+
+Parar completamente o USBWebserver.
+Fazer backup de quaisquer dados de banco de dados (se já houver algum, embora seja improvável neste ponto).
+Desinstalar/Excluir a pasta atual do USBWebserver.
+Baixar a versão mais recente e estável do USBWebserver.
+Instalar em um novo local (preferencialmente sem espaços no caminho, ex: C:\USBWebserver) para evitar futuros problemas de caminho.
+Após a reinstalação, espera-se que o phpMyAdmin funcione corretamente, permitindo a criação de novos usuários e bancos de dados sem o erro de compatibilidade.
+
+A.5. Configuração Final Esperada (Após a Reinstalação)
+Uma vez que o ambiente esteja funcional, o objetivo será configurar o acesso ao banco de dados para o projeto:
+
+Criação de Usuário Específico: Um usuário admin (ou outro nome de sua escolha) será criado no phpMyAdmin com a senha admin (ou outra senha segura) e privilégios globais para o host localhost.
+
+Código SQL (representativo da ação no phpMyAdmin):
+SQL
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+Criação do Banco de Dados do Projeto: Um banco de dados chamado projeto_final (ou o nome do seu projeto) será criado.
+
+Teste de Conexão PHP: Um script PHP simples será utilizado para confirmar a conexão bem-sucedida ao MySQL com o novo usuário e banco de dados.
+
+PHP
+
+<?php
+$servername = "localhost";
+$port = 3307; // Confirmar a porta correta após a reinstalação
+$username = "admin";
+$password = "admin";
+$dbname = "projeto_final";
+
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+if ($conn->connect_error) {
+    die("Falha na conexão: " . $conn->connect_error);
+}
+echo "Conexão bem-sucedida ao MySQL!";
+$conn->close();
+?>
+A.6. Conclusão
+Embora tenhamos enfrentado um obstáculo inesperado com o mysql_upgrade, a compreensão da causa raiz do problema e a proposição de uma solução via reinstalação garantem que o ambiente de desenvolvimento estará pronto para o prosseguimento do projeto. A capacidade de identificar e solucionar tais problemas é uma parte fundamental do processo de desenvolvimento.
+
+
+Este repositório contém o código-fonte e a documentação para o projeto .
+
+
+
+## Configuração do Ambiente de Desenvolvimento Local
+
+Este projeto foi desenvolvido utilizando o seguinte ambiente local:
+
+-   **Servidor Web:** Apache (parte do USBWebserver v10)
+-   **Linguagem de Programação:** PHP 8.1.7
+-   **Banco de Dados:** MySQL 5.7.37
+-   **Ferramenta de Gerenciamento de Banco de Dados:** phpMyAdmin 4.7.5
+-   **Ambiente Empacotado:** USBWebserver v10
+
+### Pré-requisitos
+
+Para executar este projeto localmente, você precisará ter o **USBWebserver v10** (ou uma alternativa como XAMPP/WAMP) instalado e configurado.
+
+### Passos para Configuração
+
+1.  **Baixe e Extraia o USBWebserver v10:**
+    * Obtenha o USBWebserver v10 do site oficial e extraia-o para um diretório de sua escolha (ex: `C:\USBWebserver` para evitar problemas de caminho).
+
+2.  **Configuração da Porta do Servidor Web (Apache):**
+    * Certifique-se de que o Apache esteja configurado para a porta `8088` no USBWebserver. Isso pode ser verificado no painel de controle do USBWebserver ou no arquivo `apache/conf/httpd.conf`.
+    * Acesse o servidor web em `http://localhost:8088`.
+
+3.  **Configuração do phpMyAdmin:**
+    * O arquivo de configuração do phpMyAdmin (`phpmyadmin/config.inc.php`) deve ser ajustado para se conectar ao MySQL na porta `3307` (padrão do USBWebserver).
+    * Ajuste as seguintes linhas:
+        ```php
+        $cfg['Servers'][$i]['host'] = 'localhost';
+        $cfg['Servers'][$i]['port'] = '3307';
+        $cfg['Servers'][$i]['user'] = 'root';
+        $cfg['Servers'][$i]['password'] = 'usbw'; // Ou sua senha de root configurada
+        ```
+    * Acesse o phpMyAdmin em `http://localhost:8088/phpmyadmin/`.
+
+4.  **Criação do Banco de Dados e Usuário:**
+    * No phpMyAdmin, crie um novo usuário para o projeto (ex: `admin` com senha `admin`) e conceda todos os privilégios a ele no host `localhost`.
+    * Crie um banco de dados com o nome `projeto_final` (ou o nome que seu projeto utilizar).
+
+5.  **Importação do Banco de Dados:**
+    * Se este projeto incluir um arquivo `.sql` (contendo a estrutura e/ou dados do banco de dados), importe-o para o banco de dados `projeto_final` através do phpMyAdmin.
+
+6.  **Configuração do Projeto PHP:**
+    * Copie os arquivos do projeto para o diretório `root` do seu USBWebserver (ex: `C:\USBWebserver\root`).
+    * No seu código PHP, atualize as configurações de conexão com o banco de dados para usar o usuário (`admin`), senha (`admin`) e o nome do banco de dados (`projeto_final`)  criado.
+
+    Exemplo de conexão (ajuste conforme a estrutura do seu projeto):
+    ```php
+    // connection.php (exemplo)
+    <?php
+    $servername = "localhost";
+    $port = 3307; // Porta do MySQL
+    $username = "admin";
+    $password = "admin";
+    $dbname = "projeto_final";
+
+    $conn = new mysqli($servername, $username, $password, $dbname, $port);
+
+    if ($conn->connect_error) {
+        die("Erro na conexão com o banco de dados: " . $conn->connect_error);
+    }
+    // Conexão bem-sucedida
+    ?>
+    ```
+
+## Executando o Projeto
+
+1.  Certifique-se de que o **USBWebserver está iniciado** (Apache e MySQL devem estar rodando).
+2.  Abra seu navegador e acesse: `http://localhost:8088/[nome_do_arquivo_principal_do_seu_projeto.php]` (ex: `http://localhost:8088/index.php`).
+
+---
